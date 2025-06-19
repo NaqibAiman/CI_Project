@@ -1,0 +1,33 @@
+% Load the fuzzy inference system
+fis = readfis('fuzzy_dc_motor.fis');
+
+% Define grid size for plotting
+n = 50;
+
+% Generate grid data for Error and Change in Error
+e = linspace(-1, 1, n);
+de = linspace(-1, 1, n);
+[E, DE] = meshgrid(e, de);
+
+% Preallocate output matrix
+U = zeros(n, n);
+
+% Evaluate FIS for each grid point
+for i = 1:n
+    for j = 1:n
+        U(i,j) = evalfis([E(i,j) DE(i,j)], fis);
+    end
+end
+
+% Create surface plot
+figure;
+surf(E, DE, U);
+xlabel('Error');
+ylabel('Change in Error');
+zlabel('Control Output');
+title('Fuzzy Logic Surface Plot for DC Motor Speed Control');
+colorbar;
+grid on;
+
+% Optional: Save the plot as image
+saveas(gcf, 'DCMotorFuzzySurfacePlot.png');
