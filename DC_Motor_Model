@@ -1,0 +1,39 @@
+%% DC Motor Parameters
+J = 0.01;   % inertia
+B = 0.1;    % damping
+K = 0.01;   % motor constant
+R = 1;      % resistance
+L = 0.5;    % inductance
+
+% Transfer Function Numerator and Denominator
+num = K;
+den = [(J*L) (J*R+B*L) (B*R+K^2)];
+
+% Create transfer function
+plant = tf(num, den);
+
+%% Create PID Controller for Comparison
+Kp = 100;
+Ki = 200;
+Kd = 10;
+pid_ctrl = pid(Kp, Ki, Kd);
+
+%% Create Fuzzy Logic Controller (load FIS file)
+fis = readfis('fuzzy_dc_motor.fis');
+fuzzy_ctrl = mamfis("Name","FuzzyDCMotor");
+
+% Build manually or load your .fis file
+
+%% Simulink Simulation
+% Build your model in Simulink using:
+% - Plant block (transfer function)
+% - PID controller block
+% - Fuzzy Logic Controller block (load fuzzy_dc_motor.fis)
+% - Compare both outputs
+
+%% Manual Test for FIS (optional if you want to test without simulink)
+e = 0.5;   % example error input
+de = -0.2; % example delta error input
+
+u = evalfis([e de], fis);
+disp(['Control output: ', num2str(u)]);
