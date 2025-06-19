@@ -1,0 +1,90 @@
+% Create Fuzzy Inference System for DC Motor Control
+fis = mamfis('Name','FuzzyDCMotor');
+
+% Define input: Error
+fis = addInput(fis, [-1 1], 'Name', 'Error');
+fis = addMF(fis, 'Error', 'trimf', [-1 -1 -0.5], 'Name','NB');
+fis = addMF(fis, 'Error', 'trimf', [-1 -0.5 0], 'Name','NM');
+fis = addMF(fis, 'Error', 'trimf', [-0.5 0 0.5], 'Name','NS');
+fis = addMF(fis, 'Error', 'trimf', [-0.2 0 0.2], 'Name','Z');
+fis = addMF(fis, 'Error', 'trimf', [0 0.5 1], 'Name','PS');
+fis = addMF(fis, 'Error', 'trimf', [0.5 1 1], 'Name','PM');
+fis = addMF(fis, 'Error', 'trimf', [0.5 1 1], 'Name','PB');
+
+% Define input: Change in Error
+fis = addInput(fis, [-1 1], 'Name', 'dError');
+fis = addMF(fis, 'dError', 'trimf', [-1 -1 -0.5], 'Name','NB');
+fis = addMF(fis, 'dError', 'trimf', [-1 -0.5 0], 'Name','NM');
+fis = addMF(fis, 'dError', 'trimf', [-0.5 0 0.5], 'Name','NS');
+fis = addMF(fis, 'dError', 'trimf', [-0.2 0 0.2], 'Name','Z');
+fis = addMF(fis, 'dError', 'trimf', [0 0.5 1], 'Name','PS');
+fis = addMF(fis, 'dError', 'trimf', [0.5 1 1], 'Name','PM');
+fis = addMF(fis, 'dError', 'trimf', [0.5 1 1], 'Name','PB');
+
+% Define output: Control Signal
+fis = addOutput(fis, [-1 1], 'Name','Control');
+fis = addMF(fis, 'Control', 'trimf', [-1 -1 -0.5], 'Name','NB');
+fis = addMF(fis, 'Control', 'trimf', [-1 -0.5 0], 'Name','NM');
+fis = addMF(fis, 'Control', 'trimf', [-0.5 0 0.5], 'Name','NS');
+fis = addMF(fis, 'Control', 'trimf', [-0.2 0 0.2], 'Name','Z');
+fis = addMF(fis, 'Control', 'trimf', [0 0.5 1], 'Name','PS');
+fis = addMF(fis, 'Control', 'trimf', [0.5 1 1], 'Name','PM');
+fis = addMF(fis, 'Control', 'trimf', [0.5 1 1], 'Name','PB');
+
+% Generate rules automatically (simplified example)
+ruleList = [ ...
+    1 1 1 1 1;
+    1 2 1 1 1;
+    1 3 2 1 1;
+    1 4 2 1 1;
+    1 5 3 1 1;
+    1 6 3 1 1;
+    1 7 4 1 1;
+    2 1 1 1 1;
+    2 2 2 1 1;
+    2 3 2 1 1;
+    2 4 3 1 1;
+    2 5 3 1 1;
+    2 6 4 1 1;
+    2 7 4 1 1;
+    3 1 2 1 1;
+    3 2 2 1 1;
+    3 3 3 1 1;
+    3 4 3 1 1;
+    3 5 4 1 1;
+    3 6 4 1 1;
+    3 7 5 1 1;
+    4 1 2 1 1;
+    4 2 3 1 1;
+    4 3 3 1 1;
+    4 4 4 1 1;
+    4 5 4 1 1;
+    4 6 5 1 1;
+    4 7 5 1 1;
+    5 1 3 1 1;
+    5 2 3 1 1;
+    5 3 4 1 1;
+    5 4 4 1 1;
+    5 5 5 1 1;
+    5 6 5 1 1;
+    5 7 6 1 1;
+    6 1 3 1 1;
+    6 2 4 1 1;
+    6 3 4 1 1;
+    6 4 5 1 1;
+    6 5 5 1 1;
+    6 6 6 1 1;
+    6 7 7 1 1;
+    7 1 4 1 1;
+    7 2 4 1 1;
+    7 3 5 1 1;
+    7 4 5 1 1;
+    7 5 6 1 1;
+    7 6 7 1 1;
+    7 7 7 1 1];
+
+fis = addRule(fis,ruleList);
+
+% Save FIS file
+writeFIS(fis,'fuzzy_dc_motor');
+disp('FIS file fuzzy_dc_motor.fis has been created');
